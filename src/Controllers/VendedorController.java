@@ -43,7 +43,28 @@ public class VendedorController implements  IGestorDatos<Vendedormodel>{
 
     @Override
     public Vendedormodel lectura(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+       String sql="SELECT dni_vendedor,nombre_vendedor,direccion_vendedor,email_vendedor FROM vendedor WHERE dni_vendedor='"+id+"'";
+       
+       Vendedormodel VendedorTraido=new Vendedormodel();
+       try{
+           connNew.conectar();
+           PreparedStatement realizarConsulta =connNew.getConexion().prepareStatement(sql);
+           ResultSet resultado=realizarConsulta.executeQuery();
+           if(resultado.next()){
+               VendedorTraido.setDni_vendedor(resultado.getString("dni_vendedor"));
+               VendedorTraido.setNombre_vendedor(resultado.getString("nombre_vendedor"));
+               VendedorTraido.setDireccion_vendedor(resultado.getString("direccion_vendedor"));
+               VendedorTraido.setEmail_vendedor(resultado.getString("email_vendedor"));          
+           }
+           else {
+               VendedorTraido=new Vendedormodel();
+               JOptionPane.showInternalMessageDialog(null, "No se encontraron Datos");
+           }
+       }catch(Exception e){
+       JOptionPane.showMessageDialog(null, "No se encontraron registros.","Error al recuperar datos",JOptionPane.ERROR_MESSAGE);
+           System.out.println("Error en la clase:"+this.getClass().getName());
+       }
+       return VendedorTraido;
     }
 
     @Override
